@@ -27,6 +27,27 @@ THEME_OUTPUT_PATH = File.join(DATA_DIR, 'themes')
 EXT_SOURCE_DIR = File.join(DATA_DIR, 'extension_source')
 EXT_OUTPUT_DIR = File.join(DATA_DIR, 'extensions')
 
+RULESET_CONDITION = {
+  "urlFilter": "*",
+  "resourceTypes": [
+    "main_frame",
+    "sub_frame",
+    "stylesheet",
+    "script",
+    "image",
+    "font",
+    "object",
+    "xmlhttprequest",
+    "ping",
+    "csp_report",
+    "media",
+    "websocket",
+    "webtransport",
+    "webbundle",
+    "other"
+  ]
+}
+
 
 def parse_options(arg_list)
   options = { path: "~/Applications/Chromium.app/Contents/MacOS/Chromium-orig" }
@@ -97,26 +118,7 @@ THEME_COLORS.each do |color_name,hue|
   # Add rules for autochrome_junk_drawer
   color_name_dc = color_name.downcase
   ruleset_path = File.join(EXT_SOURCE_DIR, "autochrome_junk_drawer/useragent_tag_#{color_name_dc}.json")
-  condition = JSON.generate({
-    "urlFilter": "*",
-    "resourceTypes": [
-      "main_frame",
-      "sub_frame",
-      "stylesheet",
-      "script",
-      "image",
-      "font",
-      "object",
-      "xmlhttprequest",
-      "ping",
-      "csp_report",
-      "media",
-      "websocket",
-      "webtransport",
-      "webbundle",
-      "other"
-    ]
-  })
+
   File.write(ruleset_path, JSON.generate([
     {
       "id": 1,
@@ -130,7 +132,7 @@ THEME_COLORS.each do |color_name,hue|
           }
         ]
       },
-      "condition": "#{condition}"
+      "condition": RULESET_CONDITION
     },
     {
       "id": 2,
@@ -144,7 +146,7 @@ THEME_COLORS.each do |color_name,hue|
           }
         ]
       },
-      "condition": "#{condition}"
+      "condition": RULESET_CONDITION
     }]
   ))
 end
