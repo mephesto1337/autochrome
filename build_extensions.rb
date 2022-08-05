@@ -65,7 +65,9 @@ end
 
 # Build themes
 
-Dir.mkdir(THEME_OUTPUT_PATH)
+if !Dir.exist?(THEME_OUTPUT_PATH)
+  Dir.mkdir(THEME_OUTPUT_PATH)
+end
 THEME_COLORS.each do |color_name,hue|
   Dir.mktmpdir do |temp_dir|
     manifest_path = File.join(temp_dir,'manifest.json')
