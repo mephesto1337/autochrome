@@ -93,6 +93,60 @@ THEME_COLORS.each do |color_name,hue|
     FileUtils.cp(THEME_IMAGE_PATH, temp_dir)
     build_extension(options, temp_dir, "#{THEME_OUTPUT_PATH}/#{color_name}.crx")
   end
+
+  # Add rules for autochrome_junk_drawer
+  color_name_dc = color_name.downcase
+  ruleset_path = File.join(EXT_SOURCE_DIR, "autochrome_junk_drawer/useragent_tag_#{color_name_dc}.json")
+  condition = JSON.generate({
+    "urlFilter": "*",
+    "resourceTypes": [
+      "main_frame",
+      "sub_frame",
+      "stylesheet",
+      "script",
+      "image",
+      "font",
+      "object",
+      "xmlhttprequest",
+      "ping",
+      "csp_report",
+      "media",
+      "websocket",
+      "webtransport",
+      "webbundle",
+      "other"
+    ]
+  })
+  File.write(ruleset_path, JSON.generate([
+    {
+      "id": 1,
+      "action": {
+        "type": "modifyHeaders",
+        "requestHeaders": [
+          {
+            "header": "X-Autochrome-Tag",
+            "operation": "set",
+            "value": "#{color_name_dc}"
+          }
+        ]
+      },
+      "condition": "#{condition}"
+    },
+    {
+      "id": 2,
+      "action": {
+        "type": "modifyHeaders",
+        "requestHeaders": [
+          {
+            "header": "User-Agent",
+            "operation": "append",
+            "value": " autochrome/#{color_name_dc}"
+          }
+        ]
+      },
+      "condition": "#{condition}"
+    }]
+  ))
 end
 
 # Build extensions

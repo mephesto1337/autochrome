@@ -1,3 +1,4 @@
 *.pem
 *.crx
 *.pub
+/data/extension_source/autochrome_junk_drawer/useragent_tag_*.json
